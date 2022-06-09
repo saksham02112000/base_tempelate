@@ -1,23 +1,46 @@
 import logo from './logo.svg';
 import './App.css';
+import {AuthContext} from "./context/authcontext";
+import {Route, Routes, Navigate, useLocation, BrowserRouter} from 'react-router-dom';
+import {useContext} from "react";
+import Homepage from "./components/homepage";
+import SignUpPage from "./components/signup";
+import LoginPage from "./components/login";
+import {AuthContextProvider} from "./context/authcontext";
+
 
 function App() {
+
+  function AuthenticatedRoute({ children }) {
+    const { loggedIn } = useContext(AuthContext);
+    let location = useLocation();
+    if (!loggedIn) {
+      return <Navigate to="/login" state={{ from: location }} replace />;
+    }
+    return children;
+  }
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <BrowserRouter>
+        <Routes>
+          <Route exact path="/login" element={<LoginPage />} />
+          <Route exact path="/signup" element={<SignUpPage />} />
+
+          <Route exact path="/" element={
+            <AuthContextProvider >
+              <Homepage />
+            </AuthContextProvider>} />
+        </Routes>
+
+
+      {/*  <Route exact path="/" element={*/}
+      {/*    <AuthenticatedRoute >*/}
+      {/*      <Homepage />*/}
+      {/*    </AuthenticatedRoute>} />*/}
+      {/*</Routes>*/}
+      </BrowserRouter>
     </div>
   );
 }

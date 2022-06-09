@@ -27,10 +27,15 @@ exports.list = (req, res) => {
         })
 };
 
-exports.getById = (req, res) => {
-    UserModel.findById(req.params.userId)
+exports.getByEmail = (req, res) => {
+    UserModel.findByEmail(req.user.email)
         .then((result) => {
-            res.status(200).send(result);
+            const sent_json={
+                "id": result[0].id,
+                "email": result[0].email,
+                "permissionLevel": result[0].permissionLevel
+            }
+            res.status(200).send(sent_json);
         });
 };
 exports.patchById = (req, res) => {
