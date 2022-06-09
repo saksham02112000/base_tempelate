@@ -4,7 +4,10 @@ Open terminal (/base_template)
 cd frontend
 npm install
 ```
-Make .env file with following configuration
+Make .env file with following configuration:
+```
+JWT_SECRET
+```
 <h2>For backend</h2>
 Open terminal (/base_template)
 ```
@@ -12,3 +15,6 @@ cd backend
 npm install
 ```
 Make .env file with following configuration
+```
+REACT_APP_BASE_URL="URL at which Api should be called"
+```
