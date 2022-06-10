@@ -6,6 +6,7 @@ const app = express();
 
 const AuthorizationRouter = require('./authorization/routes.config');
 const UsersRouter = require('./users/routes.config');
+const mongoose = require("mongoose");
 
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
@@ -19,6 +20,27 @@ app.use(function (req, res, next) {
         return next();
     }
 });
+
+
+
+
+const uri = "mongodb+srv://saksham-material-library:Saksham.22@cluster0.m6t5i.mongodb.net/?retryWrites=true&w=majority";
+// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+
+mongoose.connect(
+    uri,
+    {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    }
+);
+
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error: "));
+db.once("open", function () {
+    console.log("Connected successfully to MongoDB Atlas");
+});
+
 
 app.use(express.json());
 AuthorizationRouter.routesConfig(app);
