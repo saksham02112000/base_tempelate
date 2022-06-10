@@ -8,6 +8,12 @@ export const AuthContextProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
+    // useEffect(()=>{
+    //     if(loggedIn){
+    //         window.location.pathname="/";
+    //     }
+    // },[loggedIn])
+
     useEffect(() => {
         const auth_token = localStorage.getItem("auth_token");
         fetch(`http://${process.env.REACT_APP_BASE_URL}/users/info/`, {

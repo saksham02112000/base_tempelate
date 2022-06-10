@@ -11,21 +11,12 @@ import {AuthContextProvider} from "./context/authcontext";
 
 function App() {
 
-  function AuthenticatedRoute({ children }) {
-    const { loggedIn } = useContext(AuthContext);
-    let location = useLocation();
-    if (!loggedIn) {
-      return <Navigate to="/login" state={{ from: location }} replace />;
-    }
-    return children;
-  }
-
 
   return (
     <div className="App">
       <BrowserRouter>
         <Routes>
-          <Route exact path="/login" element={<LoginPage />} />
+          <Route exact path="/login" element={<LoginPage/>} />
           <Route exact path="/signup" element={<SignUpPage />} />
 
           <Route exact path="/" element={

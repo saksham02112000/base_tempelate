@@ -12,7 +12,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {useContext, useEffect, useState} from "react";
 import {Snackbar, Stack} from "@mui/material";
 import MuiAlert from '@mui/material/Alert';
-import {AuthContext} from "../../context/authcontext";
 
 function Copyright(props) {
     return (
@@ -35,13 +34,21 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 
 export default function SignUpPage() {
-    const {loggedIn} = useContext(AuthContext);
 
-    useEffect(()=> {
-        if (loggedIn) {
-            window.location.pathname = "/";
-        }
-    },[]);
+    useEffect(()=>{
+        const auth_token = localStorage.getItem("auth_token");
+        fetch(`http://${process.env.REACT_APP_BASE_URL}/users/info/`, {
+            method: "GET",
+            headers: {
+                'Authorization': `Bearer ${auth_token}`
+            },
+        })
+            .then((res)=> {
+                if (res.ok){
+                    window.location.pathname="/";
+                }
+            })
+    },[])
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -56,7 +63,9 @@ export default function SignUpPage() {
     const [confirmPassword, setConfirmPassword] = useState('');
 
     const [open, setOpen] = useState(false);
+    const [openS, setOpenS] = useState(false);
     const [loginError, setLoginError] = useState('');
+    const [loginSuccess, setLoginSuccess] = useState('');
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -77,6 +86,18 @@ export default function SignUpPage() {
         );
     }
 
+    const snackbarSuccess = () =>{
+        return (
+            <Stack spacing={2} sx={{ width: '100%' }}>
+                <Snackbar open={openS} autoHideDuration={6000} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                        {loginSuccess}
+                    </Alert>
+                </Snackbar>
+            </Stack>
+        );
+    }
+
 
     const signUp= () => {
         if(confirmPassword!==password){
@@ -84,7 +105,7 @@ export default function SignUpPage() {
             setLoginError("Both Password Don't Match");
         }
         else{
-            fetch(`${process.env.REACT_APP_BASE_URL}/users/`, {
+            fetch(`http://${process.env.REACT_APP_BASE_URL}/users/`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json'
@@ -98,7 +119,9 @@ export default function SignUpPage() {
                         err.response = res;
                         throw err.response.json();
                     }
-                    return res.json();
+                    setOpenS(true);
+                    setLoginSuccess("Signed-up Successfully");
+                    window.location.pathname="/login"
                 })
         }
     }
@@ -189,6 +212,7 @@ export default function SignUpPage() {
                 <Copyright sx={{ mt: 8, mb: 4 }} />
             </Container>
             {snackbar()}
+            {snackbarSuccess()}
         </ThemeProvider>
 
     );

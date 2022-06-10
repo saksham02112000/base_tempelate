@@ -37,13 +37,20 @@ const theme = createTheme();
 
 export default function LoginPage() {
 
-    // const {loggedIn} = useContext(AuthContext);
-    //
-    // useEffect(()=> {
-    //     if (loggedIn) {
-    //         window.location.pathname = "/";
-    //     }
-    // },[]);
+    useEffect(()=>{
+        const auth_token = localStorage.getItem("auth_token");
+        fetch(`http://${process.env.REACT_APP_BASE_URL}/users/info/`, {
+            method: "GET",
+            headers: {
+                'Authorization': `Bearer ${auth_token}`
+            },
+        })
+            .then((res)=> {
+                if (res.ok){
+                    window.location.pathname="/";
+                }
+            })
+    },[])
 
 
     const [open, setOpen] = useState(false);

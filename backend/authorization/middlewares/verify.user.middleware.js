@@ -26,7 +26,7 @@ exports.isPasswordAndUserMatch = (req, res, next) => {
     UserModel.findByEmail(req.body.email)
         .then((user)=>{
             if(!user[0]){
-                res.status(404).send({});
+                res.status(404).send({errors: "User not found"});
             }else{
                 let passwordFields = user[0].password.split('$');
                 let salt = passwordFields[0];
