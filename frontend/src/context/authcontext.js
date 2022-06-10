@@ -10,7 +10,7 @@ export const AuthContextProvider = ({ children }) => {
 
     useEffect(() => {
         const auth_token = localStorage.getItem("auth_token");
-        fetch(`${process.env.REACT_APP_BASE_URL}/user/info/`, {
+        fetch(`http://${process.env.REACT_APP_BASE_URL}/users/info/`, {
             method: "GET",
             headers: {
                 'Authorization': `Bearer ${auth_token}`
@@ -18,6 +18,7 @@ export const AuthContextProvider = ({ children }) => {
         })
             .then((res) => {
                 if(!res.ok) {
+                    console.log("not ok");
                     logout();
                     // throw new Error(res.status);
                 }
@@ -26,7 +27,7 @@ export const AuthContextProvider = ({ children }) => {
             .then((data) => {
                 if (data) {
                     setLoggedIn(true);
-                    setUser({email: data.payload.email, id: data.payload.id, role: data.payload.role});
+                    setUser({email: data.email, id: data.id, role: data.role});
                 }
             })
             .catch((err) => {

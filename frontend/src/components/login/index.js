@@ -13,7 +13,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {useContext, useEffect, useState} from "react";
 import MuiAlert from "@mui/material/Alert";
 import {Snackbar, Stack} from "@mui/material";
-import {AuthContext} from "../../context/authcontext";
+// import {AuthContext} from "../../context/authcontext";
 import "./styles/index.css";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -37,13 +37,13 @@ const theme = createTheme();
 
 export default function LoginPage() {
 
-    const {loggedIn} = useContext(AuthContext);
-
-    useEffect(()=> {
-        if (loggedIn) {
-            window.location.pathname = "/";
-        }
-    },[]);
+    // const {loggedIn} = useContext(AuthContext);
+    //
+    // useEffect(()=> {
+    //     if (loggedIn) {
+    //         window.location.pathname = "/";
+    //     }
+    // },[]);
 
 
     const [open, setOpen] = useState(false);
@@ -73,7 +73,7 @@ export default function LoginPage() {
 
     const loginUser= async ()=>{
         console.log(email, password)
-        fetch(`${process.env.REACT_APP_BASE_URL}/auth/`, {
+        fetch(`http://${process.env.REACT_APP_BASE_URL}/auth/`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json'
@@ -89,15 +89,15 @@ export default function LoginPage() {
                 return res.json();
             })
             .then((data)=> {
-                localStorage.setItem("auth_token", data.access);
+                localStorage.setItem("auth_token", data.accessToken);
             })
             .then(()=> window.location.pathname= "/")
             .catch((err)=>{
                 console.log(err)
                 setOpen(true);
-                // err.then((data)=> {
-                //     setLoginError(data.message);
-                // });
+                err.then((data)=> {
+                    setLoginError(data.errors);
+                });
             });
     }
 
